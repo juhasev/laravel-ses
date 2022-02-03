@@ -34,7 +34,7 @@ class ComplaintController extends BaseController
         $result = json_decode($content);
 
         if ($result === null) {
-            Log::error('Failed to parse AWS SES Complaint request '. json_last_error_msg());
+            Log::error('Failed to parse AWS SES Complaint request ' . json_last_error_msg());
             return response()->json(['success' => false], 422);
         }
 
@@ -55,7 +55,7 @@ class ComplaintController extends BaseController
         $message = json_decode($result->Message);
 
         if ($message === null) {
-            throw new Exception("Result message failed to decode: ".json_last_error_msg()."! ". print_r($result,true));
+            throw new Exception("Result message failed to decode: " . json_last_error_msg() . "! " . print_r($result, true));
         }
 
         $this->persistComplaint($message);
@@ -85,14 +85,18 @@ class ComplaintController extends BaseController
                 ->firstOrFail();
 
         } catch (ModelNotFoundException $e) {
-            $this->logMessage('Message ID ('.$messageId.') not found in the SentEmail, this email is likely sent without Laravel SES. Skipping delivery processing...');
+            $this->logMessage('Message ID (' . $messageId . ') not found in the SentEmail, this email is likely sent without Laravel SES. Skipping delivery processing...');
             return;
         }
+
+        $complaintFeedbackType = property_exists($message->complaint, 'complaintFeedbackType')
+            ? $message->complaint->complaintFeedbackType
+            : 'unknown';
 
         try {
             $emailComplaint = ModelResolver::get('EmailComplaint')::create([
                 'sent_email_id' => $sentEmail->id,
-                'type' => $message->complaint->complaintFeedbackType,
+                'type' => $complaintFeedbackType,
                 'complained_at' => Carbon::parse($message->mail->timestamp)
             ]);
 
