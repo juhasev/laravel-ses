@@ -10,7 +10,7 @@ use Symfony\Component\Mime\Email;
 
 interface SesMailerInterface
 {
-    public function initMessage(Email $message): SentEmailContract;
+    public function initMessage(Email $message, string $messageId): SentEmailContract;
 
     public function setupTracking($setupTracking, SentEmailContract $sentEmail): string;
 

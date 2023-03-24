@@ -39,15 +39,16 @@ class SesMailer extends Mailer implements SesMailerInterface
      * Creates database entry for the sent email
      *
      * @param Email $message
+     * @param string $messageId
      * @return SentEmailContract
      * @throws LaravelSesTooManyRecipientsException
      */
-    public function initMessage(Email $message): SentEmailContract
+    public function initMessage(Email $message, string $messageId): SentEmailContract
     {
         $this->checkNumberOfRecipients($message);
 
         return ModelResolver::get('SentEmail')::create([
-            'message_id' => $message->generateMessageId(),
+            'message_id' => $messageId,
             'email' => $message->getTo()[0]->getAddress(),
             'batch_id' => $this->getBatchId(),
             'sent_at' => Carbon::now(),
@@ -203,17 +204,18 @@ class SesMailer extends Mailer implements SesMailerInterface
      */
     protected function sendSymfonyMessage(Email $message): void
     {
-        $headers = $message->getHeaders();
+        /**
+         * Append unique Message-ID to the headers. Please note AWS SES will store reference
+         * to message ID internally while the outgoing email with get another Message-ID specific to
+         * AWS SES. However, delivery reporting return the original set Message-ID.
+         */
+        $headers = $message->getPreparedHeaders();
 
-        $sentEmail = $this->initMessage($message);
+        $sentEmail = $this->initMessage($message, $headers->get('Message-ID')->toString());
 
-        $this->appendToHeaders($sentEmail, $headers);
+        $message->setHeaders($this->appendToHeaders($headers));
 
-        $message->setHeaders($headers);
-
-        $newBody = $this->setupTracking((string) $message->getHtmlBody(), $sentEmail);
-
-        $message->html($newBody);
+        $message->html($this->setupTracking((string) $message->getHtmlBody(), $sentEmail));
 
         // Sending email first, in case sendEvent fails
         parent::sendSymfonyMessage($message);
@@ -221,15 +223,11 @@ class SesMailer extends Mailer implements SesMailerInterface
         $this->sendEvent($sentEmail);
     }
 
-    /**
-     * Append unique Message-ID to the headers. Please note AWS SES will store reference
-     * to message ID internally while the outgoing email with get another Message-ID specific to
-     * AWS SES. However, delivery reporting return the original set Message-ID.
-     */
-    protected function appendToHeaders(SentEmailContract $sentEmail, Headers &$headers): void
+    protected function appendToHeaders(Headers $headers): Headers
     {
-        $headers->addIdHeader('Message-ID', $sentEmail->message_id);
         $headers->addTextHeader('X-SES-CONFIGURATION-SET', $this->getConfigurationSetName());
+
+        return $headers;
     }
 
     /**

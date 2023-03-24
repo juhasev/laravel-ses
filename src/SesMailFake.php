@@ -10,6 +10,7 @@ use Illuminate\Support\Carbon;
 use Closure;
 use Illuminate\Contracts\Mail\Mailable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Str;
 use Illuminate\Support\Testing\Fakes\MailFake;
 use Juhasev\LaravelSes\Contracts\SentEmailContract;
 use Juhasev\LaravelSes\Exceptions\LaravelSesTooManyRecipientsException;
@@ -24,16 +25,17 @@ class SesMailFake extends MailFake implements SesMailerInterface
      * Init message this will be called everytime
      *
      * @param Email $message
+     * @param string $messageId
      * @return SentEmailContract
-     * @throws Exception
+     * @throws LaravelSesTooManyRecipientsException
      * @psalm-suppress NoInterfaceProperties
      */
-    public function initMessage(Email $message): SentEmailContract
+    public function initMessage(Email $message, string $messageId): SentEmailContract
     {
         $this->checkNumberOfRecipients($message);
 
         return ModelResolver::get('SentEmail')::create([
-            'message_id' => $message->generateMessageId(),
+            'message_id' => $messageId,
             'email' => $message->getTo()[0]->getAddress(),
             'batch_id' => $this->getBatchId(),
             'sent_at' => Carbon::now(),
@@ -81,7 +83,9 @@ class SesMailFake extends MailFake implements SesMailerInterface
         $message->html(' ');
 
         $symfonyMessage = $message->getSymfonyMessage();
-        $sentEmail = $this->initMessage($symfonyMessage);
+
+        $sentEmail = $this->initMessage($symfonyMessage, Str::random(8));
+
         $emailBody = $this->setupTracking((string) $message->getHtmlBody(), $sentEmail);
 
         $view->sesBody = $emailBody;
