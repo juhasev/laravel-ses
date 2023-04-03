@@ -74,18 +74,22 @@ class LaravelSesServiceProvider extends ServiceProvider
             $sesConfig = $app->make('config')->get('laravelses');
 
             try {
-                $symfonyMailer->setPingThreshold(
-                    (int) Arr::get($sesConfig, 'ping_threshold', 10)
-                );
+                if (method_exists($symfonyMailer, 'setPingThreshold')) {
+                    $symfonyMailer->setPingThreshold(
+                        (int)Arr::get($sesConfig, 'ping_threshold', 10)
+                    );
+                }
             } catch (Exception $e) {
                 logger("Unable to set ping threshold on Symfony Mailer. ".$e->getMessage());
             }
 
             try {
-                $symfonyMailer->setRestartThreshold(
-                    (int) Arr::get($sesConfig, 'restart_threshold.threshold', 100),
-                    (int) Arr::get($sesConfig, 'restart_threshold.sleep', 0)
-                );
+                if (method_exists($symfonyMailer, 'setRestartThreshold')) {
+                    $symfonyMailer->setRestartThreshold(
+                        (int)Arr::get($sesConfig, 'restart_threshold.threshold', 100),
+                        (int)Arr::get($sesConfig, 'restart_threshold.sleep', 0)
+                    );
+                }
             } catch (Exception $e) {
                 logger("Unable to set restart threshold on Symfony Mailer. ".$e->getMessage());
             }
