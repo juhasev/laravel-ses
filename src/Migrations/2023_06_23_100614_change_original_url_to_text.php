@@ -14,7 +14,7 @@ return new class extends Migration {
 
     public function down(): void
     {
-        Schema::table('laravel_ses_sent_emails', function (Blueprint $table) {
+        Schema::table('laravel_ses_email_links', function (Blueprint $table) {
             $table->string('original_url')->change();
         });
     }
