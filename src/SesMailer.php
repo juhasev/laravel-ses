@@ -34,8 +34,6 @@ class SesMailer extends Mailer implements SesMailerInterface
 {
     use TrackingTrait;
 
-    private $sentEmailModel = null;
-
     /**
      * Init message (this is always called)
      * Creates database entry for the sent email
@@ -57,15 +55,6 @@ class SesMailer extends Mailer implements SesMailerInterface
             'complaint_tracking' => $this->complaintTracking,
             'bounce_tracking' => $this->bounceTracking
         ]);
-    }
-
-    /**
-     * Return the generated SES SentEmail model instance
-     * @return SentEmailContract
-     */
-    public function getSentEmailModel(): SentEmailContract
-    {
-        return $this->sentEmailModel;
     }
 
     /**
@@ -216,20 +205,20 @@ class SesMailer extends Mailer implements SesMailerInterface
     {
         $headers = $message->getHeaders();
 
-        $this->sentEmailModel = $this->initMessage($message);
+        $sentEmail = $this->initMessage($message);
 
-        $this->appendToHeaders($this->sentEmailModel, $headers);
+        $this->appendToHeaders($sentEmail, $headers);
 
         $message->setHeaders($headers);
 
-        $newBody = $this->setupTracking((string) $message->getHtmlBody(), $this->sentEmailModel);
+        $newBody = $this->setupTracking((string) $message->getHtmlBody(), $sentEmail);
 
         $message->html($newBody);
 
         // Sending email first, in case sendEvent fails
         parent::sendSymfonyMessage($message);
 
-        $this->sendEvent($this->sentEmailModel);
+        $this->sendEvent($sentEmail);
     }
 
     /**
