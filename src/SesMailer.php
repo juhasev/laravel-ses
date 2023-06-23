@@ -211,7 +211,7 @@ class SesMailer extends Mailer implements SesMailerInterface
          */
         $headers = $message->getPreparedHeaders();
 
-        $sentEmail = $this->initMessage($message, $headers->get('Message-ID')->toString());
+        $sentEmail = $this->initMessage($message, $headers->get('Message-ID')?->toString());
 
         $message->setHeaders($this->appendToHeaders($headers));
 
