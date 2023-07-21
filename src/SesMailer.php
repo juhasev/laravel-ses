@@ -211,7 +211,12 @@ class SesMailer extends Mailer implements SesMailerInterface
          */
         $headers = $message->getPreparedHeaders();
 
-        $sentEmail = $this->initMessage($message, $headers->get('Message-ID')?->toString());
+        /**
+         * `getBodyAsString()` returns only the email address part
+         *  of the Message-ID wrapped in the arrow brackets.
+         *  Here, we store it into the DB without the arrow brackets.
+         */
+        $sentEmail = $this->initMessage($message, str_replace(['<', '>'], '', $headers->get('Message-ID')?->getBodyAsString()));
 
         $message->setHeaders($this->appendToHeaders($headers));
 
