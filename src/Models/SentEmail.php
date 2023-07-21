@@ -83,4 +83,9 @@ class SentEmail extends Model implements SentEmailContract
     {
         return $this->getKey();
     }
+
+    public function getMessageId(): string
+    {
+        return $this->message_id;
+    }
 }

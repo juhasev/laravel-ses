@@ -16,6 +16,8 @@ interface SentEmailContract
 {
     public function setMessageId(string $messageId): self;
 
+    public function getMessageId(): string;
+
     public function setDeliveredAt(DateTimeInterface $time): self;
     
     public function emailOpen(): HasOne;
