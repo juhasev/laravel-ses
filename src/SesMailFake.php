@@ -25,17 +25,16 @@ class SesMailFake extends MailFake implements SesMailerInterface
      * Init message this will be called everytime
      *
      * @param Email $message
-     * @param string $messageId
      * @return SentEmailContract
      * @throws LaravelSesTooManyRecipientsException
      * @psalm-suppress NoInterfaceProperties
      */
-    public function initMessage(Email $message, string $messageId): SentEmailContract
+    public function initMessage(Email $message): SentEmailContract
     {
         $this->checkNumberOfRecipients($message);
 
         return ModelResolver::get('SentEmail')::create([
-            'message_id' => $messageId,
+            'message_id' => $message->generateMessageId(),
             'email' => $message->getTo()[0]->getAddress(),
             'batch_id' => $this->getBatchId(),
             'sent_at' => Carbon::now(),
@@ -84,9 +83,7 @@ class SesMailFake extends MailFake implements SesMailerInterface
 
         $symfonyMessage = $message->getSymfonyMessage();
 
-        $headers = $message->getPreparedHeaders();
-
-        $sentEmail = $this->initMessage($symfonyMessage, str_replace(['<', '>'], '', $headers->get('Message-ID')?->getBodyAsString()));
+        $sentEmail = $this->initMessage($symfonyMessage);
 
         $emailBody = $this->setupTracking((string) $message->getHtmlBody(), $sentEmail);
 
