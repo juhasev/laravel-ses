@@ -51,6 +51,11 @@ trait TrackingTrait
     private $batch;
 
     /**
+     * @var callable|null
+     */
+    private $trackingModelCallback = null;
+
+    /**
      * Set tracking
      *
      * @param string $setupTracking
@@ -116,14 +121,37 @@ trait TrackingTrait
 
     /**
      * Get batch ID
-     * 
+     *
      * @return int|null
      */
-    public function getBatchId(): ?int 
+    public function getBatchId(): ?int
     {
         return $this->batch?->getId();
     }
-    
+
+    /**
+     * Set tracking model callback
+     *
+     * @param callable $callback
+     * @return SesMailerInterface
+     */
+    public function setTrackingModelCallback(callable $callback): SesMailerInterface
+    {
+        $this->trackingModelCallback = $callback;
+
+        return $this;
+    }
+
+    /**
+     * Get tracking model callback
+     *
+     * @return callable|null
+     */
+    public function getTrackingModelCallback(): ?callable
+    {
+        return $this->trackingModelCallback;
+    }
+
     /**
      * Enable open tracking
      *

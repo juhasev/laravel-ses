@@ -20,6 +20,10 @@ interface SesMailerInterface
 
     public function getBatch(): ?BatchContract;
 
+    public function setTrackingModelCallback(callable $callback): SesMailerInterface;
+
+    public function getTrackingModelCallback(): ?callable;
+
     public function enableOpenTracking(): SesMailerInterface;
 
     public function enableLinkTracking(): SesMailerInterface;

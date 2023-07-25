@@ -46,7 +46,7 @@ class SesMailer extends Mailer implements SesMailerInterface
     {
         $this->checkNumberOfRecipients($message);
 
-        return ModelResolver::get('SentEmail')::create([
+        $model = ModelResolver::get('SentEmail')::create([
             'message_id' => $message->generateMessageId(),
             'email' => $message->getTo()[0]->getAddress(),
             'batch_id' => $this->getBatchId(),
@@ -55,6 +55,13 @@ class SesMailer extends Mailer implements SesMailerInterface
             'complaint_tracking' => $this->complaintTracking,
             'bounce_tracking' => $this->bounceTracking
         ]);
+
+        $callback = $this->getTrackingModelCallback();
+        if ($callback) {
+            $callback($model);
+        }
+
+        return $model;
     }
 
     /**
