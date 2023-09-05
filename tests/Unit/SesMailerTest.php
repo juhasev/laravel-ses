@@ -3,6 +3,7 @@
 namespace Juhasev\LaravelSes\Tests\Unit;
 
 use Illuminate\Support\Facades\Event;
+use Juhasev\LaravelSes\Contracts\SentEmailContract;
 use Juhasev\LaravelSes\Exceptions\LaravelSesTooManyRecipientsException;
 use Juhasev\LaravelSes\Facades\SesMail;
 use Juhasev\LaravelSes\Factories\Events\SesSentEvent;
@@ -11,7 +12,7 @@ use Juhasev\LaravelSes\Tests\UnitTestCase;
 
 class SesMailerTest extends UnitTestCase
 {
-    public function testSendEmailEventIsSent()
+    public function testSendEmailEventIsSent(): void
     {
         SesMail::fake();
         Event::fake();
@@ -25,7 +26,7 @@ class SesMailerTest extends UnitTestCase
         SesMail::assertSent(TestMailable::class);
     }
 
-    public function testExceptionIsThrownWhenTryingToSendToMoreThanOnePerson()
+    public function testExceptionIsThrownWhenTryingToSendToMoreThanOnePerson(): void
     {
         $this->expectException(LaravelSesTooManyRecipientsException::class);
 
@@ -37,7 +38,7 @@ class SesMailerTest extends UnitTestCase
         ])->send(new TestMailable());
     }
 
-    public function testTrackingSettingsAreSetCorrectly()
+    public function testTrackingSettingsAreSetCorrectly(): void
     {
         SesMail::enableOpenTracking()
             ->enableLinkTracking()
@@ -85,4 +86,26 @@ class SesMailerTest extends UnitTestCase
             'complaintTracking' => false,
         ], SesMail::trackingSettings());
     }
+
+    public function testSendEmailWithInitMessageCallback(): void
+    {
+        SesMail::fake();
+
+        $customObject = new CustomObject();
+
+        $this->assertNull($customObject->messageId);
+
+        SesMail::enableAllTracking()
+            ->useInitMessageCallback(
+                static fn (SentEmailContract $model) => $customObject->messageId = $model->getMessageId()
+            )
+            ->to('john.doe@example.com')
+            ->send(new TestMailable());
+
+        $this->assertNotNull($customObject->messageId);
+    }
+}
+
+class CustomObject {
+    public ?string $messageId = null;
 }
