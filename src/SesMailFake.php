@@ -10,7 +10,6 @@ use Illuminate\Support\Carbon;
 use Closure;
 use Illuminate\Contracts\Mail\Mailable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Support\Str;
 use Illuminate\Support\Testing\Fakes\MailFake;
 use Juhasev\LaravelSes\Contracts\SentEmailContract;
 use Juhasev\LaravelSes\Exceptions\LaravelSesTooManyRecipientsException;

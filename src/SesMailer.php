@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Juhasev\LaravelSes;
 
 use Closure;
-use Illuminate\Contracts\Mail\Mailable;
 use Illuminate\Contracts\Mail\Mailable as MailableContract;
 use Illuminate\Mail\SentMessage;
 use Illuminate\Support\Carbon;

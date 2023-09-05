@@ -9,7 +9,6 @@
          processIsolation="false"
          stopOnFailure="true"
          verbose="true"
-         printerClass="NunoMaduro\Collision\Adapters\Phpunit\Printer"
 >
   <testsuites>
     <testsuite name="Package Tests">
