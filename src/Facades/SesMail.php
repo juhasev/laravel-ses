@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Juhasev\LaravelSes\Facades;
 
+use Illuminate\Mail\MailManager;
 use Illuminate\Support\Facades\Facade;
 use Juhasev\LaravelSes\SesMailFake;
 
@@ -12,17 +13,12 @@ use Juhasev\LaravelSes\SesMailFake;
  */
 class SesMail extends Facade
 {
-    public static function fake()
+    public static function fake(): void
     {
-        static::swap(new SesMailFake());
+        static::swap(new SesMailFake(new MailManager(app())));
     }
 
-    /**
-     * Get the registered name of the component.
-     *
-     * @return string
-     */
-    protected static function getFacadeAccessor()
+    protected static function getFacadeAccessor(): string
     {
         return 'SesMailer';
     }
