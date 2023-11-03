@@ -10,6 +10,7 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Juhasev\LaravelSes\Contracts\EmailOpenContract;
 use Juhasev\LaravelSes\Factories\Events\SesOpenEvent;
@@ -27,11 +28,13 @@ class OpenController extends BaseController
     public function open($beaconIdentifier): JsonResponse|Redirector|RedirectResponse
     {
         try {
-            $emailOpen = ModelResolver::get('EmailOpen')::whereBeaconIdentifier($beaconIdentifier)->firstOrFail();
-            $emailOpen->opened_at = Carbon::now();
-            $emailOpen->save();
+            DB::transaction(function () use ($beaconIdentifier) {
+                $emailOpen = ModelResolver::get('EmailOpen')::whereBeaconIdentifier($beaconIdentifier)->lockForUpdate()->firstOrFail();
+                $emailOpen->opened_at = Carbon::now();
+                $emailOpen->save();
 
-            $this->sendEvent($emailOpen);
+                $this->sendEvent($emailOpen);
+            });
 
         } catch (ModelNotFoundException $e) {
 
