@@ -16,8 +16,12 @@ class LaravelSesException extends Exception
         parent::__construct($message, $code, $previous);
     }
 
-    // custom string representation of object
-    public function __toString()
+    /**
+     * Custom string representation of object
+     *
+     * @return string
+     */
+    public function __toString(): string
     {
         return __CLASS__ . ": [{$this->code}]: {$this->message}\n";
     }
