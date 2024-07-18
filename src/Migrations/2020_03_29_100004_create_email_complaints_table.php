@@ -2,20 +2,17 @@
 
 declare(strict_types=1);
 
+namespace Juhasev\LaravelSes\Migrations;
+
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEmailComplaintsTable extends Migration
+return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
+    public function up(): void
     {
-        Schema::create('laravel_ses_email_complaints', function (Blueprint $table) {
+        Schema::create('laravel_ses_email_complaints', static function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedBigInteger('sent_email_id');
             $table->string('type');
@@ -28,13 +25,8 @@ class CreateEmailComplaintsTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('laravel_ses_email_complaints');
     }
-}
+};

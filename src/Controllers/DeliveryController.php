@@ -21,10 +21,6 @@ use Psr\Http\Message\ServerRequestInterface;
 class DeliveryController extends BaseController
 {
     /**
-     * Delivery request from SNS
-     *
-     * @param ServerRequestInterface $request
-     * @return JsonResponse
      * @throws Exception
      * @throws GuzzleException
      */
@@ -76,14 +72,12 @@ class DeliveryController extends BaseController
     }
 
     /**
-     * Persist delivery record to the database
-     *
-     * @param MessageContent $message
      * @throws Exception
      */
     protected function persistDelivery(MessageContent $message): void
     {
         try {
+            /** @psalm-suppress UndefinedMethod */
             $sentEmail = ModelResolver::get('SentEmail')::whereMessageId($message->id)
                 ->whereDeliveryTracking(true)
                 ->firstOrFail();
@@ -103,11 +97,6 @@ class DeliveryController extends BaseController
         }
     }
 
-    /**
-     * Sent event to listeners
-     *
-     * @param SentEmailContract $sentEmail
-     */
     protected function sendEvent(SentEmailContract $sentEmail): void
     {
         event(new SesDeliveryEvent($sentEmail));

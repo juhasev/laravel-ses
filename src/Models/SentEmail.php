@@ -37,31 +37,55 @@ class SentEmail extends Model implements SentEmailContract
 
     public function emailOpen(): HasOne
     {
+        /**
+         * @psalm-suppress InvalidArgument
+         * @psalm-suppress InvalidCast
+         */
         return $this->hasOne(ModelResolver::get('EmailOpen'));
     }
 
     public function emailLinks(): HasMany
     {
+        /**
+         * @psalm-suppress InvalidArgument
+         * @psalm-suppress InvalidCast
+         */
         return $this->hasMany(ModelResolver::get('EmailLink'));
     }
 
     public function emailBounce(): HasOne
     {
+        /**
+         * @psalm-suppress InvalidArgument
+         * @psalm-suppress InvalidCast
+         */
         return $this->hasOne(ModelResolver::get('EmailBounce'));
     }
 
     public function emailComplaint(): HasOne
     {
+        /**
+         * @psalm-suppress InvalidArgument
+         * @psalm-suppress InvalidCast
+         */
         return $this->hasOne(ModelResolver::get('EmailComplaint'));
     }
 
     public function emailReject(): HasOne
     {
+        /**
+         * @psalm-suppress InvalidArgument
+         * @psalm-suppress InvalidCast
+         */
         return $this->hasOne(ModelResolver::get('EmailReject'));
     }
 
     public function batch(): BelongsTo
     {
+        /**
+         * @psalm-suppress InvalidArgument
+         * @psalm-suppress InvalidCast
+         */
         return $this->belongsTo(ModelResolver::get('Batch'));
     }
 

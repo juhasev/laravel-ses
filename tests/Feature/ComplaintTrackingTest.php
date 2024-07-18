@@ -48,7 +48,7 @@ class ComplaintTrackingTest extends FeatureTestCase
         $this->assertNull(ModelResolver::get('EmailComplaint')::first());
     }
 
-    public function testSubscriptionConfirmation()
+    public function testSubscriptionConfirmation(): void
     {
         $fakeJson = (array) json_decode($this->exampleSubscriptionResponse, associative: true);
 

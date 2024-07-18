@@ -21,5 +21,4 @@ class SesBounceEvent implements EventInterface
             'sentEmail.batch'
         ])->toArray();
     }
-
 }

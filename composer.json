@@ -24,24 +24,23 @@
         }
     ],
     "require": {
-        "php": "^8.1",
-        "illuminate/contracts": "^10.0 | ^11.0",
-        "doctrine/dbal": "3.5.4",
+        "php": "^8.2",
+        "illuminate/contracts": "^11.0",
         "aws/aws-sdk-php": "^3.288.0",
         "ramsey/uuid": "^4.3",
-        "guzzlehttp/guzzle": "^7.0.1",
-        "paquettg/php-html-parser": "^2.2 | ^3.0",
+        "guzzlehttp/guzzle": "^7.8.1",
+        "paquettg/php-html-parser": "^3.1",
         "aws/aws-php-sns-message-validator": "^1.7",
-        "symfony/psr-http-message-bridge": "^2.1 | ^6.0 | ^7.0",
+        "symfony/psr-http-message-bridge": "^7.0",
         "nyholm/psr7": "^1.0"
     },
     "require-dev": {
         "mockery/mockery": "^1.0",
-        "orchestra/testbench": "^8.0 | ^9.0",
+        "orchestra/testbench": "^9.0",
         "phpunit/phpunit": "^10.5.0",
         "ext-json": "*",
-        "vimeo/psalm": "^4.23 | ^5.25",
-        "nunomaduro/collision": "^7.0 | ^8.1"
+        "vimeo/psalm": "^5.25",
+        "nunomaduro/collision": "^8.1"
     },
     "autoload": {
         "psr-4": {
@@ -54,7 +53,7 @@
        }
    },
     "scripts": {
-        "psalm": "vendor/bin/psalm",
+        "lint": "vendor/bin/psalm",
         "test": "vendor/bin/phpunit",
         "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
     },

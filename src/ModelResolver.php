@@ -9,12 +9,10 @@ use Exception;
 class ModelResolver
 {
     /**
-     * Resolve model name from config
-     *
-     * @param string $name
+     * @return class-string
      * @throws Exception
      */
-    public static function get($name)
+    public static function get(string $name): string
     {
         $class = config('laravelses.models.'.ucfirst($name));
 

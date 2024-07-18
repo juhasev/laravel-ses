@@ -16,15 +16,12 @@ use Juhasev\LaravelSes\ModelResolver;
 class LinkController extends BaseController
 {
     /**
-     * Link clicked
-     *
-     * @param $linkIdentifier
-     * @return RedirectResponse|Redirector
      * @throws Exception
      */
     public function click($linkIdentifier): Redirector|RedirectResponse
     {
         try {
+            /** @psalm-suppress UndefinedMethod */
             $emailLink = ModelResolver::get('EmailLink')::whereLinkIdentifier($linkIdentifier)->firstOrFail();
 
             $emailLink->setClicked(true)->incrementClickCount();
@@ -41,11 +38,6 @@ class LinkController extends BaseController
         }
     }
 
-    /**
-     * Sent event to listeners
-     *
-     * @param EmailLinkContract $emailLink
-     */
     protected function sendEvent(EmailLinkContract $emailLink): void
     {
         event(new SesLinkEvent($emailLink));

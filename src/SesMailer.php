@@ -33,8 +33,6 @@ class SesMailer extends Mailer implements SesMailerInterface
     use TrackingTrait;
 
     /**
-     * Throw SampleNinja exceptions
-     *
      * @throws LaravelSesDailyQuotaExceededException
      * @throws LaravelSesInvalidSenderAddressException
      * @throws LaravelSesMaximumSendingRateExceeded
@@ -67,12 +65,6 @@ class SesMailer extends Mailer implements SesMailerInterface
         throw new LaravelSesSendFailedException($errorMessage, $errorCode);
     }
 
-    /**
-     * Resolve error code
-     *
-     * @param string $message
-     * @return string
-     */
     protected function parseErrorFromSymfonyTransportException(string $message): string
     {
         $message = Str::after($message, ' with message "');
@@ -80,24 +72,14 @@ class SesMailer extends Mailer implements SesMailerInterface
         return Str::beforeLast($message, '"');
     }
 
-    /**
-     * Parse error code
-     *
-     * @param string $smtpError
-     * @return int
-     */
     protected function parseErrorCode(string $smtpError): int
     {
         return (int) Str::before($smtpError, ' Message');
     }
 
     /**
-     * Send a new message using a view.
-     *
      * @param MailableContract|string|array $view
-     * @param array $data
      * @param Closure|string|null $callback
-     * @return SentMessage|null
      * @throws LaravelSesDailyQuotaExceededException
      * @throws LaravelSesInvalidSenderAddressException
      * @throws LaravelSesMaximumSendingRateExceeded
@@ -150,11 +132,6 @@ class SesMailer extends Mailer implements SesMailerInterface
     }
 
     /**
-     * Send symfony message
-     *
-     * @param Email $message
-     * @return void
-     *
      * @throws ChildNotFoundException
      * @throws CircularException
      * @throws CurlException

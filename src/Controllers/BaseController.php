@@ -10,16 +10,15 @@ use Aws\Sns\MessageValidator;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use JsonException;
 use RuntimeException;
 
 class BaseController extends Controller
 {
     /**
-     * Validate SNS requests from AWS
-     *
-     * @param Message $message
      * @throws InvalidSnsMessageException
      */
     protected function validateSns(Message $message): void
@@ -30,10 +29,6 @@ class BaseController extends Controller
     }
 
     /**
-     * Make call back to AWS to confirm subscription
-     *
-     * @param Message $message
-     * @return void
      * @throws GuzzleException
      * @throws RuntimeException
      */
@@ -43,21 +38,15 @@ class BaseController extends Controller
             throw new RuntimeException('Failed to confirm subscription because of missing SubscribeURL param: '. json_encode($message));
         }
 
-        $response = (new Client)->get($message['SubscribeURL']);
+        $response = Http::get($message['SubscribeURL']);
 
-        if ($response->getStatusCode() !== 200) {
+        if ($response->status() !== 200) {
             throw new RuntimeException('Subscription confirmation failed: '. json_encode($message));
         }
 
         $this->logMessage("Subscribed to (".$message['TopicArn'].") using GET Request " . $message['SubscribeURL']);
     }
 
-    /**
-     * If AWS is trying to confirm subscription
-     *
-     * @param Message $message
-     * @return bool
-     */
     protected function isSubscriptionConfirmation(Message $message): bool
     {
         if ($message['Type'] === 'SubscriptionConfirmation') {
@@ -69,12 +58,6 @@ class BaseController extends Controller
         return false;
     }
 
-    /**
-     * Is topic confirmation
-     *
-     * @param Message $message
-     * @return bool
-     */
     protected function isTopicConfirmation(Message $message): bool
     {
         if (
@@ -89,12 +72,7 @@ class BaseController extends Controller
         return false;
     }
 
-    /**
-     * Log message
-     *
-     * @param $message
-     */
-    protected function logMessage($message): void
+    protected function logMessage(string $message): void
     {
         if ($this->debug()) {
             Log::debug(config('laravelses.log_prefix') . ": " . $message);
@@ -102,10 +80,7 @@ class BaseController extends Controller
     }
 
     /**
-     * Debug mode on
-     *
-     * @param string|object|array|null $content
-     * @throws \JsonException
+     * @throws JsonException
      */
     protected function logResult(string|object|array|null $content): void
     {
@@ -118,21 +93,11 @@ class BaseController extends Controller
         }
     }
 
-    /**
-     * Check if debugging is turned on
-     *
-     * @return bool
-     */
     protected function debug(): bool
     {
         return config('laravelses.debug') === true;
     }
 
-    /**
-     * Check if request validation is turned on
-     *
-     * @return bool
-     */
     protected function shouldValidateRequest(): bool
     {
         return config('laravelses.aws_sns_validator') === true;

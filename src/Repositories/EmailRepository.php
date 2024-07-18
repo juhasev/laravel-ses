@@ -4,44 +4,40 @@ declare(strict_types=1);
 
 namespace Juhasev\LaravelSes\Repositories;
 
+use Exception;
 use Illuminate\Support\Collection;
 use Juhasev\LaravelSes\ModelResolver;
+use Juhasev\LaravelSes\Models\SentEmail;
 
 class EmailRepository
 {
     /**
-     * Get all sent emails
-     *
-     * @param $email
-     * @return Collection
-     * @throws \Exception
+     * @return Collection<int, SentEmail>
+     * @throws Exception
      */
-    public static function getSent($email): Collection
+    public static function getSent(string $email): Collection
     {
+        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('SentEmail')::whereEmail($email)->get();
     }
 
     /**
-     * Get deliveries
-     *
-     * @param $email
-     * @return Collection
-     * @throws \Exception
+     * @return Collection<int, SentEmail>
+     * @throws Exception
      */
-    public static function getDeliveries($email): Collection
+    public static function getDeliveries(string $email): Collection
     {
+        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('SentEmail')::whereEmail($email)->whereNotNull('delivered_at')->get();
     }
 
     /**
-     * Get opens
-     *
-     * @param $email
-     * @return Collection
-     * @throws \Exception
+     * @return Collection<int, SentEmail>
+     * @throws Exception
      */
-    public static function getOpens($email): Collection
+    public static function getOpens(string $email): Collection
     {
+        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('SentEmail')::whereEmail($email)
             ->with('emailOpen')
             ->whereHas('emailOpen', function ($query) {
@@ -50,14 +46,12 @@ class EmailRepository
     }
 
     /**
-     * Get bounces
-     *
-     * @param $email
-     * @return Collection
-     * @throws \Exception
+     * @return Collection<int, SentEmail>
+     * @throws Exception
      */
-    public static function getBounces($email): Collection
+    public static function getBounces(string $email): Collection
     {
+        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('SentEmail')::whereEmail($email)
             ->with('emailBounce')
             ->whereHas('emailBounce', function ($query) {
@@ -66,14 +60,12 @@ class EmailRepository
     }
 
     /**
-     * Get complaints
-     *
-     * @param $email
-     * @return Collection
-     * @throws \Exception
+     * @return Collection<int, SentEmail>
+     * @throws Exception
      */
-    public static function getComplaints($email): Collection
+    public static function getComplaints(string $email): Collection
     {
+        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('SentEmail')::whereEmail($email)
             ->with('emailComplaint')
             ->whereHas('emailComplaint', function ($query) {
@@ -82,15 +74,13 @@ class EmailRepository
     }
 
     /**
-     * Get all emails that have been clicked
-     *
-     * @param $email
-     * @return Collection
-     * @throws \Exception
+     * @return Collection<int, SentEmail>
+     * @throws Exception
      */
 
-    public static function getClicks($email): Collection
+    public static function getClicks(string $email): Collection
     {
+        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('SentEmail')::whereEmail($email)
             ->with(['emailLinks' => function ($query) {
                 $query->where('clicked', true);

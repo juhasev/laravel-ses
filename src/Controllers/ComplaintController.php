@@ -21,10 +21,6 @@ use Psr\Http\Message\ServerRequestInterface;
 class ComplaintController extends BaseController
 {
     /**
-     * Complaint from SNS
-     *
-     * @param ServerRequestInterface $request
-     * @return JsonResponse
      * @throws Exception
      * @throws GuzzleException
      */
@@ -76,14 +72,12 @@ class ComplaintController extends BaseController
     }
 
     /**
-     * Persist complaint to the database
-     *
-     * @param MessageContent $message
      * @throws Exception
      */
     protected function persistComplaint(MessageContent $message): void
     {
         try {
+            /** @psalm-suppress UndefinedMethod */
             $sentEmail = ModelResolver::get('SentEmail')::whereMessageId($message->id)
                 ->whereComplaintTracking(true)
                 ->firstOrFail();
@@ -94,6 +88,7 @@ class ComplaintController extends BaseController
         }
 
         try {
+            /** @psalm-suppress UndefinedMethod */
             $emailComplaint = ModelResolver::get('EmailComplaint')::create([
                 'sent_email_id' => $sentEmail->id,
                 'type' => $message->complaintFeedbackType,
@@ -107,11 +102,6 @@ class ComplaintController extends BaseController
         }
     }
 
-    /**
-     * Sent event to listeners
-     *
-     * @param EmailComplaintContract $complaint
-     */
     protected function sendEvent(EmailComplaintContract $complaint): void
     {
         event(new SesComplaintEvent($complaint));

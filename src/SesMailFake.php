@@ -18,12 +18,8 @@ class SesMailFake extends MailFake implements SesMailerInterface
     use TrackingTrait;
 
     /**
-     * Send a new message using a view.
-     *
      * @param Mailable|string|array $view
-     * @param array $data
      * @param Closure|string|null $callback
-     * @return void
      * @throws Exception
      * @psalm-suppress UndefinedInterfaceMethod
      * @psalm-suppress NoInterfaceProperties

@@ -22,13 +22,7 @@ class SnsSetup
     protected string $configSetName;
     protected int $exceptionCount;
 
-    /**
-     * SnsSetup constructor.
-     *
-     * @param Command $console
-     * @param string|null $domain
-     */
-    public function __construct(Command $console, string $domain = null)
+    public function __construct(Command $console, ?string $domain = null)
     {
         $console->info(str_repeat('-', 48));
         $console->info(" SETTING UP SES Bounce, Delivery and Complaints ");
@@ -71,21 +65,11 @@ class SnsSetup
         $console->info('ALL COMPLETED!');
     }
 
-    /**
-     * Fluent method
-     *
-     * @param Command $console
-     * @param string|null $domain
-     * @return SnsSetup
-     */
-    public static function create(Command $console, string $domain = null): SnsSetup
+    public static function create(Command $console, ?string $domain = null): SnsSetup
     {
         return new self($console, $domain);
     }
 
-    /**
-     * Init SNS setup
-     */
     public function init(): void
     {
         $this->createConfigurationSet();
@@ -94,12 +78,6 @@ class SnsSetup
         $this->setupNotification('delivery');
     }
 
-    /**
-     * Setup notification
-     *
-     * @param string $type
-     * @return bool
-     */
     public function setupNotification(string $type): bool
     {
         $topic = App::environment() . "-ses-{$type}-" . config('services.ses.region');
@@ -145,9 +123,6 @@ class SnsSetup
         return true;
     }
 
-    /**
-     * Create configuration set
-     */
     protected function createConfigurationSet(): void
     {
         try {
@@ -168,14 +143,6 @@ class SnsSetup
         }
     }
 
-    /**
-     * Output SES Exception
-     *
-     * @param string $type
-     * @param string $name
-     * @param Exception $e
-     * @param bool $exit
-     */
     protected function outputException(string $type, string $name, Exception $e, bool $exit = false): void
     {
         $this->exceptionCount++;
@@ -186,7 +153,9 @@ class SnsSetup
 
             $this->console->error($e->getMessage());
 
-            if ($exit) exit(0);
+            if ($exit) {
+                exit(0);
+            }
         }
     }
 

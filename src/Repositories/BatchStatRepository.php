@@ -12,26 +12,20 @@ use Juhasev\LaravelSes\ModelResolver;
 class BatchStatRepository
 {
     /**
-     * Get sent count for batch
-     *
-     * @param BatchContract $batch
-     * @return mixed
      * @throws Exception
      */
-    public static function getSentCount(BatchContract $batch)
+    public static function getSentCount(BatchContract $batch): mixed
     {
+        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('SentEmail')::where('batch_id', $batch->getId())->count();
     }
 
     /**
-     * Get opened count for batch
-     *
-     * @param BatchContract $batch
-     * @return int
      * @throws Exception
      */
     public static function getOpenedCount(BatchContract $batch): int
     {
+        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('SentEmail')::where('batch_id', $batch->getId())
             ->join(
                 'laravel_ses_email_opens',
@@ -43,14 +37,11 @@ class BatchStatRepository
     }
 
     /**
-     * Get bounced count for batch
-     *
-     * @param BatchContract $batch
-     * @return int
      * @throws Exception
      */
     public static function getBouncedCount(BatchContract $batch): int
     {
+        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('SentEmail')::where('batch_id', $batch->getId())
             ->join(
                 'laravel_ses_email_bounces',
@@ -62,14 +53,11 @@ class BatchStatRepository
     }
 
     /**
-     * Get complained count for batch
-     *
-     * @param BatchContract $batch
-     * @return int
      * @throws Exception
      */
     public static function getComplaintsCount(BatchContract $batch): int
     {
+        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('SentEmail')::where('batch_id', $batch->getId())
         ->join(
             'laravel_ses_email_complaints',
@@ -81,28 +69,22 @@ class BatchStatRepository
     }
 
     /**
-     * Get deliveries count for batch
-     *
-     * @param BatchContract $batch
-     * @return int
      * @throws Exception
      */
     public static function getDeliveriesCount(BatchContract $batch): int
     {
+        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('SentEmail')::where('batch_id', $batch->getId())
             ->whereNotNull('delivered_at')
             ->count();
     }
 
     /**
-     * Get clicks count for batch
-     *
-     * @param BatchContract $batch
-     * @return int
      * @throws Exception
      */
     public static function getClicksCount(BatchContract $batch): int
     {
+        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('SentEmail')::where('laravel_ses_sent_emails.batch_id', $batch->getId())
             ->join('laravel_ses_email_links', function ($join) {
                 $join
@@ -114,14 +96,11 @@ class BatchStatRepository
     }
 
     /**
-     * Get link popularity sorted (most popular first)
-     *
-     * @param BatchContract $batch
-     * @return array
      * @throws Exception
      */
     public static function getLinkPopularity(BatchContract $batch): array
     {
+        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('SentEmail')::where('laravel_ses_sent_emails.batch_id', $batch->getId())
             ->join('laravel_ses_email_links', function ($join) {
                 $join

@@ -21,10 +21,6 @@ use Psr\Http\Message\ServerRequestInterface;
 class BounceController extends BaseController
 {
     /**
-     * Bounce controller
-     *
-     * @param ServerRequestInterface $request
-     * @return JsonResponse
      * @throws Exception
      * @throws GuzzleException
      */
@@ -76,14 +72,12 @@ class BounceController extends BaseController
     }
 
     /**
-     * Persist bounce
-     *
-     * @param MessageContent $message
      * @throws Exception
      */
     protected function persistBounce(MessageContent $message): void
     {
         try {
+            /** @psalm-suppress UndefinedMethod */
             $sentEmail = ModelResolver::get('SentEmail')::whereMessageId($message->id)
                 ->whereBounceTracking(true)
                 ->firstOrFail();
@@ -95,6 +89,7 @@ class BounceController extends BaseController
         }
 
         try {
+            /** @psalm-suppress UndefinedMethod */
             $bounce = ModelResolver::get('EmailBounce')::create([
                 'sent_email_id' => $sentEmail->id,
                 'type' => $message->bounceType,
@@ -108,11 +103,6 @@ class BounceController extends BaseController
         }
     }
 
-    /**
-     * Sent event to listeners
-     *
-     * @param EmailBounceContract $bounce
-     */
     protected function sendEvent(EmailBounceContract $bounce): void
     {
         event(new SesBounceEvent($bounce));

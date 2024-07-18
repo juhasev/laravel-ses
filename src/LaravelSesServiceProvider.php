@@ -13,12 +13,7 @@ use Juhasev\LaravelSes\Commands\SetupSns;
 
 class LaravelSesServiceProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot()
+    public function boot(): void
     {
         $this->loadRoutesFrom(__DIR__.'/routes.php');
         $this->loadViewsFrom(__DIR__.'/Mocking/Views', 'LaravelSes');
@@ -46,12 +41,7 @@ class LaravelSesServiceProvider extends ServiceProvider
         }
     }
 
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
+    public function register(): void
     {
         $this->mergeConfigFrom(
            __DIR__.'/Config/laravelses.php',
@@ -61,11 +51,7 @@ class LaravelSesServiceProvider extends ServiceProvider
         $this->registerIlluminateMailer();
     }
 
-    /**
-     * Register SesMailer facade
-     *
-     */
-    protected function registerIlluminateMailer()
+    protected function registerIlluminateMailer(): void
     {
         $this->app->singleton('SesMailer', function ($app) {
 
@@ -122,13 +108,9 @@ class LaravelSesServiceProvider extends ServiceProvider
     }
 
     /**
-     * Set global address
-     *
-     * @param $mailer
-     * @param array $config
-     * @param $type
+     * @psalm-param 'from'|'reply_to'|'to' $type
      */
-    protected function setGlobalAddress($mailer, array $config, $type)
+    protected function setGlobalAddress(SesMailer $mailer, array $config, string $type): void
     {
         $address = Arr::get($config, $type);
 

@@ -17,74 +17,42 @@ use Ramsey\Uuid\Uuid;
 
 class MailProcessor
 {
-    /**
-     * @var string
-     */
-    protected $emailBody;
+    protected string $emailBody;
 
-    /**
-     * @var BatchContract
-     */
-    protected $batch;
+    protected BatchContract $batch;
 
-    /**
-     * @var SentEmailContract
-     */
-    protected $sentEmail;
+    protected SentEmailContract $sentEmail;
 
-    /**
-     * MailProcessor constructor.
-     *
-     * @param SentEmailContract $sentEmail
-     * @param string $emailBody
-     */
     public function __construct(SentEmailContract $sentEmail, string $emailBody)
     {
         $this->setEmailBody($emailBody);
         $this->setSentEmail($sentEmail);
     }
 
-    /**
-     * Get email body
-     *
-     * @return string
-     */
     public function getEmailBody(): string
     {
         return $this->emailBody;
     }
 
-    /**
-     * Set email body
-     *
-     * @param string $body
-     */
     private function setEmailBody(string $body): void
     {
         $this->emailBody = $body;
     }
 
-    /**
-     * Set email sent
-     *
-     * @param SentEmailContract $email
-     */
     private function setSentEmail(SentEmailContract $email): void
     {
         $this->sentEmail = $email;
     }
 
     /**
-     * Open tracking
-     *
-     * @return MailProcessor
      * @throws Exception
      */
-    public function openTracking(): MailProcessor
+    public function openTracking(): self
     {
         $beaconIdentifier = Uuid::uuid4()->toString();
         $beaconUrl = config('app.url') . "/ses/beacon/$beaconIdentifier";
 
+        /** @psalm-suppress UndefinedMethod */
         ModelResolver::get('EmailOpen')::create([
             'sent_email_id' => $this->sentEmail->getId(),
             'beacon_identifier' => $beaconIdentifier
@@ -97,9 +65,6 @@ class MailProcessor
     }
 
     /**
-     * Link tracking
-     *
-     * @return MailProcessor
      * @throws ChildNotFoundException
      * @throws CircularException
      * @throws CurlException
@@ -107,10 +72,10 @@ class MailProcessor
      * @throws StrictException
      * @throws Exception
      */
-    public function linkTracking(): MailProcessor
+    public function linkTracking(): self
     {
         $dom = new Dom;
-        $dom->load($this->getEmailBody());
+        $dom->loadStr($this->getEmailBody());
         $anchors = $dom->find('a');
 
         foreach ($anchors as $anchor) {
@@ -127,16 +92,13 @@ class MailProcessor
     }
 
     /**
-     * Create app link
-     *
-     * @param string $originalUrl
-     * @return string
      * @throws Exception
      */
     private function createAppLink(string $originalUrl): string
     {
         $linkIdentifier = Uuid::uuid4()->toString();
 
+        /** @psalm-suppress UndefinedMethod */
         ModelResolver::get('EmailLink')::create([
             'sent_email_id' => $this->sentEmail->getId(),
             'link_identifier' => $linkIdentifier,

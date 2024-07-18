@@ -3,8 +3,10 @@
 namespace Juhasev\LaravelSes\Tests;
 
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Http;
 use Juhasev\LaravelSes\Facades\SesMail;
 use Juhasev\LaravelSes\LaravelSesServiceProvider;
+use Mockery\Mock;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
 class FeatureTestCase extends OrchestraTestCase
@@ -16,6 +18,11 @@ class FeatureTestCase extends OrchestraTestCase
         $this->withoutExceptionHandling();
 
         $this->artisan('migrate', ['--database' => 'testbench']);
+
+        Http::preventStrayRequests();
+        Http::fake([
+            'google.com' => Http::response(),
+        ]);
     }
 
     /**
