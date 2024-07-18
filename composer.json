@@ -30,9 +30,9 @@
         "aws/aws-sdk-php": "^3.288.0",
         "ramsey/uuid": "^4.3",
         "guzzlehttp/guzzle": "^7.0.1",
-        "paquettg/php-html-parser": "^2.2",
+        "paquettg/php-html-parser": "^2.2 | ^3.0",
         "aws/aws-php-sns-message-validator": "^1.7",
-        "symfony/psr-http-message-bridge": "^2.1",
+        "symfony/psr-http-message-bridge": "^2.1 | ^6.0 | ^7.0",
         "nyholm/psr7": "^1.0"
     },
     "require-dev": {
