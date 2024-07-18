@@ -7,19 +7,15 @@
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          processIsolation="false"
-         stopOnFailure="true"
+         stopOnFailure="false"
          verbose="true"
 >
-  <testsuites>
-    <testsuite name="Package Tests">
-      <directory suffix="Test.php">./tests</directory>
-    </testsuite>
-  </testsuites>
-  <php>
-    <env name="SES_SNS_VALIDATOR" value="false"/>
-    <env name="SES_DEBUG" value="false"/>
-  </php>
-  <coverage>
+    <testsuites>
+        <testsuite name="Test Suite">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+    <coverage>
         <include>
             <directory suffix=".php">./src</directory>
         </include>
@@ -32,4 +28,8 @@
     <logging>
         <junit outputFile="build/report.junit.xml"/>
     </logging>
+    <php>
+        <env name="SES_SNS_VALIDATOR" value="false"/>
+        <env name="SES_DEBUG" value="false"/>
+    </php>
 </phpunit>

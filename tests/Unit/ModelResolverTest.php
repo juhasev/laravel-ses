@@ -30,7 +30,7 @@ class ModelResolverTest extends UnitTestCase
         $this->assertEquals($expected, ModelResolver::get($name));
     }
 
-    public function modelResolverData(): array
+    public static function modelResolverData(): array
     {
         return [
             ['Batch', Batch::class],
