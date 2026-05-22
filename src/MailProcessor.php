@@ -18,10 +18,27 @@ class MailProcessor
 
     protected SentEmailContract $sentEmail;
 
-    public function __construct(SentEmailContract $sentEmail, string $emailBody)
+    protected ?string $customDomain;
+
+    public function __construct(SentEmailContract $sentEmail, string $emailBody, ?string $customDomain = null)
     {
         $this->setEmailBody($emailBody);
         $this->setSentEmail($sentEmail);
+        $this->customDomain = $customDomain;
+    }
+
+    /**
+     * Resolve the base URL used for tracking links. Falls back to the global
+     * config('app.url') domain when no custom domain was set for the message.
+     * Trailing slashes are trimmed so paths never produce a double slash.
+     */
+    private function baseUrl(): string
+    {
+        $domain = $this->customDomain !== null && $this->customDomain !== ''
+            ? $this->customDomain
+            : (string) config('app.url');
+
+        return rtrim($domain, '/');
     }
 
     public function getEmailBody(): string
@@ -45,7 +62,7 @@ class MailProcessor
     public function openTracking(): self
     {
         $beaconIdentifier = Uuid::uuid4()->toString();
-        $beaconUrl = config('app.url') . "/ses/beacon/$beaconIdentifier";
+        $beaconUrl = $this->baseUrl() . "/ses/beacon/$beaconIdentifier";
 
         /** @psalm-suppress UndefinedMethod */
         ModelResolver::get('EmailOpen')::create([
@@ -66,10 +83,11 @@ class MailProcessor
     {
         $dom = HtmlDomParser::str_get_html($this->getEmailBody());
 
+        /** @psalm-suppress TooManyTemplateParams voku/simple_html_dom annotates its iterator generically */
         foreach ($dom->findMulti('a') as $anchor) {
             $originalUrl = $anchor->getAttribute('href');
 
-            if ((string) $originalUrl !== '') {
+            if ($originalUrl !== '') {
                 $anchor->setAttribute('href', $this->createAppLink($originalUrl));
             }
         }
@@ -93,6 +111,6 @@ class MailProcessor
             'original_url' => $originalUrl
         ]);
 
-        return config('app.url') . "/ses/link/$linkIdentifier";
+        return $this->baseUrl() . "/ses/link/$linkIdentifier";
     }
 }
