@@ -83,10 +83,11 @@ class MailProcessor
     {
         $dom = HtmlDomParser::str_get_html($this->getEmailBody());
 
+        /** @psalm-suppress TooManyTemplateParams voku/simple_html_dom annotates its iterator generically */
         foreach ($dom->findMulti('a') as $anchor) {
             $originalUrl = $anchor->getAttribute('href');
 
-            if ((string) $originalUrl !== '') {
+            if ($originalUrl !== '') {
                 $anchor->setAttribute('href', $this->createAppLink($originalUrl));
             }
         }
