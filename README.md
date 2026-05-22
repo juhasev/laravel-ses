@@ -173,6 +173,25 @@ SesMail::enableAllTracking()
 
 Calling enableAllTracking() enables open, reject, bounce, delivery, complaint and link tracking.
 
+### Overriding the tracking domain per message
+
+By default all tracking URLs (the open-tracking beacon and the rewritten link-tracking
+hrefs) are built from your global `APP_URL`. If you send mail for multiple domains
+(e.g. a multi-tenant application) you can override the domain for a single message
+with the chainable `customDomain()` method:
+
+```php
+SesMail::enableAllTracking()
+    ->customDomain('https://newdomain.com')
+    ->to('hello@example.com')
+    ->send(new Mailable);
+```
+
+The open beacon and every tracked link in that message will point at
+`https://newdomain.com/ses/...` instead of `APP_URL`. Pass `null` (or simply omit the
+call) to fall back to the global `APP_URL`. Make sure the package routes are reachable
+on the custom domain.
+
 > Please note that an LaravelSesTooManyRecipients Exception is thrown if you attempt send a Mailable that contains multiple recipients when Open -tracking is enabled.
 
 Other exception thrown are:

@@ -19,6 +19,8 @@ use Symfony\Component\Mime\Email;
  * @method int|null getBatchId()
  * @method BatchContract|null getBatch()
  * @method static setBatch(string $batch)
+ * @method static customDomain(?string $domain)
+ * @method string|null getCustomDomain()
  * @method static useInitMessageCallback(Closure $callback)
  * @method static enableAllTracking()
  * @method static enableOpenTracking()

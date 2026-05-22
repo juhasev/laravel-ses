@@ -85,6 +85,62 @@ class MailProcessorTest extends UnitTestCase
         $this->assertEquals(1, $emailLink['sent_email_id']);
     }
 
+    public function testCustomDomainOverridesGlobalDomainForTrackingUrls()
+    {
+        $sentEmail = ModelResolver::get('SentEmail')::create([
+            'email' => 'lamela@yahoo.com',
+            'message_id' => 'somerandomid@swift.generated'
+        ]);
+
+        $body = "Open me <a href='https://click.me'>Click Me</a>";
+
+        $mailProcessor = new MailProcessor($sentEmail, $body, 'https://newdomain.com');
+
+        $parsedBody = $mailProcessor->openTracking()->linkTracking()->getEmailBody();
+
+        $beaconId = ModelResolver::get('EmailOpen')::first()->beacon_identifier;
+        $linkId = ModelResolver::get('EmailLink')::first()->link_identifier;
+
+        $this->assertStringContainsString('https://newdomain.com/ses/beacon/' . $beaconId, $parsedBody);
+        $this->assertStringContainsString('https://newdomain.com/ses/link/' . $linkId, $parsedBody);
+
+        // The global config domain must NOT leak into the tracking URLs.
+        $this->assertStringNotContainsString('https://laravel-ses.com/ses/', $parsedBody);
+    }
+
+    public function testCustomDomainTrailingSlashDoesNotProduceDoubleSlash()
+    {
+        $sentEmail = ModelResolver::get('SentEmail')::create([
+            'email' => 'lamela@yahoo.com',
+            'message_id' => 'somerandomid@swift.generated'
+        ]);
+
+        $mailProcessor = new MailProcessor($sentEmail, 'Open me', 'https://newdomain.com/');
+
+        $parsedBody = $mailProcessor->openTracking()->getEmailBody();
+
+        $beaconId = ModelResolver::get('EmailOpen')::first()->beacon_identifier;
+
+        $this->assertStringContainsString('https://newdomain.com/ses/beacon/' . $beaconId, $parsedBody);
+        $this->assertStringNotContainsString('//ses/beacon', $parsedBody);
+    }
+
+    public function testTrackingUrlsFallBackToGlobalDomainWhenNoCustomDomain()
+    {
+        $sentEmail = ModelResolver::get('SentEmail')::create([
+            'email' => 'lamela@yahoo.com',
+            'message_id' => 'somerandomid@swift.generated'
+        ]);
+
+        $mailProcessor = new MailProcessor($sentEmail, 'Open me');
+
+        $parsedBody = $mailProcessor->openTracking()->getEmailBody();
+
+        $beaconId = ModelResolver::get('EmailOpen')::first()->beacon_identifier;
+
+        $this->assertStringContainsString('https://laravel-ses.com/ses/beacon/' . $beaconId, $parsedBody);
+    }
+
     public function testLinksWithoutHrefAreSkipped()
     {
         $sentEmail = ModelResolver::get('SentEmail')::create([

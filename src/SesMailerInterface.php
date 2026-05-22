@@ -21,6 +21,10 @@ interface SesMailerInterface
 
     public function getBatch(): ?BatchContract;
 
+    public function customDomain(?string $domain): SesMailerInterface;
+
+    public function getCustomDomain(): ?string;
+
     public function enableOpenTracking(): SesMailerInterface;
 
     public function enableLinkTracking(): SesMailerInterface;

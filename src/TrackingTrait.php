@@ -28,6 +28,8 @@ trait TrackingTrait
 
     private ?BatchContract $batch = null;
 
+    private ?string $customDomain = null;
+
     /**
      * @param string $setupTracking
      * @throws Exception
@@ -36,7 +38,12 @@ trait TrackingTrait
     {
         $this->batch = null;
 
-        $mailProcessor = new MailProcessor($sentEmail, $setupTracking);
+        $mailProcessor = new MailProcessor($sentEmail, $setupTracking, $this->customDomain);
+
+        // Custom domain is per-message data (like the batch above), not a
+        // persistent toggle. Reset it after it has been consumed so it cannot
+        // silently leak onto a subsequent send to a different domain.
+        $this->customDomain = null;
 
         if ($this->openTracking) {
             $mailProcessor->openTracking();
@@ -74,6 +81,25 @@ trait TrackingTrait
     public function getBatch(): ?BatchContract
     {
         return $this->batch;
+    }
+
+    /**
+     * Override the global tracking domain (config('app.url')) for this mailer.
+     *
+     * Affects every tracking URL generated for the message — the open-tracking
+     * beacon and the rewritten link-tracking hrefs. Pass null to fall back to
+     * the configured global domain.
+     */
+    public function customDomain(?string $domain): SesMailerInterface
+    {
+        $this->customDomain = $domain;
+
+        return $this;
+    }
+
+    public function getCustomDomain(): ?string
+    {
+        return $this->customDomain;
     }
 
     public function getBatchId(): ?int
