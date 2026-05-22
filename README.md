@@ -3,11 +3,11 @@
 # Laravel SES (Simple Email Service AWS)
 Laravel SES is package that allows you to get sending statistics for emails you send through AWS SES (Simple Email Service), 
 including deliveries, opens, bounces, complaints and link tracking. This package was originally written by Oliveready7.
-Unfortunately the original author had stopped maintaining this package so I decided to create this fork so that this 
-package can be used with current versions of Laravel. The minimum requirement is PHP 7.3, Laravel 9 requires PHP 8.x.
+Unfortunately, the original author had stopped maintaining this package, so I decided to create this fork so that this 
+package can be used with current versions of Laravel.
 
 All packages have been updated to modern versions. I have optimized the original database
-storage for space and proper indexing. This package is compatible with Laravel 9.x.
+storage for space and proper indexing. This package is compatible with Laravel 11.x.
 
 Laravel SES also supports SMTP errors codes will throw meaning exceptions like when you exceed your rate limits so you can handle proper back off.
 
@@ -172,6 +172,25 @@ SesMail::enableAllTracking()
 ```
 
 Calling enableAllTracking() enables open, reject, bounce, delivery, complaint and link tracking.
+
+### Overriding the tracking domain per message
+
+By default all tracking URLs (the open-tracking beacon and the rewritten link-tracking
+hrefs) are built from your global `APP_URL`. If you send mail for multiple domains
+(e.g. a multi-tenant application) you can override the domain for a single message
+with the chainable `customDomain()` method:
+
+```php
+SesMail::enableAllTracking()
+    ->customDomain('https://newdomain.com')
+    ->to('hello@example.com')
+    ->send(new Mailable);
+```
+
+The open beacon and every tracked link in that message will point at
+`https://newdomain.com/ses/...` instead of `APP_URL`. Pass `null` (or simply omit the
+call) to fall back to the global `APP_URL`. Make sure the package routes are reachable
+on the custom domain.
 
 > Please note that an LaravelSesTooManyRecipients Exception is thrown if you attempt send a Mailable that contains multiple recipients when Open -tracking is enabled.
 
