@@ -2,6 +2,17 @@
 
 All notable changes to `laravel-ses` will be documented in this file.
 
+## 8.0.1 - 2026-09-08
+
+### What's Changed
+
+* Harden the supply chain by @leMaur in https://github.com/juhasev/laravel-ses/pull/37
+* Declare the illuminate components the package extends by @leMaur in https://github.com/juhasev/laravel-ses/pull/43
+* Allow voku/simple_html_dom 5.0 by @leMaur in https://github.com/juhasev/laravel-ses/pull/44
+* Bump the workflow actions to their current majors by @leMaur in https://github.com/juhasev/laravel-ses/pull/46
+
+**Full Changelog**: https://github.com/juhasev/laravel-ses/compare/8.0.0...8.0.1
+
 ## 8.0.0 - 2026-09-08
 
 ### What's Changed
