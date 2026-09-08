@@ -5,10 +5,11 @@ namespace Juhasev\LaravelSes\Tests\Feature\Events;
 use Juhasev\LaravelSes\Factories\Events\SesComplaintEvent;
 use Juhasev\LaravelSes\ModelResolver;
 use Juhasev\LaravelSes\Tests\FeatureTestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class SesComplaintEventTest extends FeatureTestCase
 {
-    /** @test */
+    #[Test]
     public function it_ensures_the_right_data_structure_for_complaint_event(): void
     {
         $batch = ModelResolver::get('Batch')::create([

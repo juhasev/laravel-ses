@@ -64,7 +64,6 @@ class MailProcessor
         $beaconIdentifier = Uuid::uuid4()->toString();
         $beaconUrl = $this->baseUrl() . "/ses/beacon/$beaconIdentifier";
 
-        /** @psalm-suppress UndefinedMethod */
         ModelResolver::get('EmailOpen')::create([
             'sent_email_id' => $this->sentEmail->getId(),
             'beacon_identifier' => $beaconIdentifier
@@ -83,7 +82,6 @@ class MailProcessor
     {
         $dom = HtmlDomParser::str_get_html($this->getEmailBody());
 
-        /** @psalm-suppress TooManyTemplateParams voku/simple_html_dom annotates its iterator generically */
         foreach ($dom->findMulti('a') as $anchor) {
             $originalUrl = $anchor->getAttribute('href');
 
@@ -104,7 +102,6 @@ class MailProcessor
     {
         $linkIdentifier = Uuid::uuid4()->toString();
 
-        /** @psalm-suppress UndefinedMethod */
         ModelResolver::get('EmailLink')::create([
             'sent_email_id' => $this->sentEmail->getId(),
             'link_identifier' => $linkIdentifier,

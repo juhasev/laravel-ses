@@ -12,6 +12,19 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Juhasev\LaravelSes\Contracts\SentEmailContract;
 use Juhasev\LaravelSes\ModelResolver;
 
+/**
+ * @property int $id
+ * @property int|null $batch_id
+ * @property string $message_id
+ * @property string $email
+ * @property \Illuminate\Support\Carbon|null $sent_at
+ * @property \Illuminate\Support\Carbon|null $delivered_at
+ * @property bool $complaint_tracking
+ * @property bool $delivery_tracking
+ * @property bool $bounce_tracking
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ */
 class SentEmail extends Model implements SentEmailContract
 {
     protected $table = 'laravel_ses_sent_emails';
@@ -37,55 +50,26 @@ class SentEmail extends Model implements SentEmailContract
 
     public function emailOpen(): HasOne
     {
-        /**
-         * @psalm-suppress InvalidArgument
-         * @psalm-suppress InvalidCast
-         */
         return $this->hasOne(ModelResolver::get('EmailOpen'));
     }
 
     public function emailLinks(): HasMany
     {
-        /**
-         * @psalm-suppress InvalidArgument
-         * @psalm-suppress InvalidCast
-         */
         return $this->hasMany(ModelResolver::get('EmailLink'));
     }
 
     public function emailBounce(): HasOne
     {
-        /**
-         * @psalm-suppress InvalidArgument
-         * @psalm-suppress InvalidCast
-         */
         return $this->hasOne(ModelResolver::get('EmailBounce'));
     }
 
     public function emailComplaint(): HasOne
     {
-        /**
-         * @psalm-suppress InvalidArgument
-         * @psalm-suppress InvalidCast
-         */
         return $this->hasOne(ModelResolver::get('EmailComplaint'));
-    }
-
-    public function emailReject(): HasOne
-    {
-        /**
-         * @psalm-suppress InvalidArgument
-         * @psalm-suppress InvalidCast
-         */
-        return $this->hasOne(ModelResolver::get('EmailReject'));
     }
 
     public function batch(): BelongsTo
     {
-        /**
-         * @psalm-suppress InvalidArgument
-         * @psalm-suppress InvalidCast
-         */
         return $this->belongsTo(ModelResolver::get('Batch'));
     }
 

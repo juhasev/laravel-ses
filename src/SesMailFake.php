@@ -21,9 +21,6 @@ class SesMailFake extends MailFake implements SesMailerInterface
      * @param Mailable|string|array $view
      * @param Closure|string|null $callback
      * @throws Exception
-     * @psalm-suppress UndefinedInterfaceMethod
-     * @psalm-suppress NoInterfaceProperties
-     * @psalm-suppress InvalidArgument
      */
     public function send($view, array $data = [], $callback = null): void
     {

@@ -77,7 +77,6 @@ class ComplaintController extends BaseController
     protected function persistComplaint(MessageContent $message): void
     {
         try {
-            /** @psalm-suppress UndefinedMethod */
             $sentEmail = ModelResolver::get('SentEmail')::whereMessageId($message->id)
                 ->whereComplaintTracking(true)
                 ->firstOrFail();
@@ -88,7 +87,6 @@ class ComplaintController extends BaseController
         }
 
         try {
-            /** @psalm-suppress UndefinedMethod */
             $emailComplaint = ModelResolver::get('EmailComplaint')::create([
                 'sent_email_id' => $sentEmail->id,
                 'type' => $message->complaintFeedbackType,

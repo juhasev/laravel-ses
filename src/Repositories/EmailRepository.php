@@ -17,7 +17,6 @@ class EmailRepository
      */
     public static function getSent(string $email): Collection
     {
-        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('SentEmail')::whereEmail($email)->get();
     }
 
@@ -27,7 +26,6 @@ class EmailRepository
      */
     public static function getDeliveries(string $email): Collection
     {
-        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('SentEmail')::whereEmail($email)->whereNotNull('delivered_at')->get();
     }
 
@@ -37,7 +35,6 @@ class EmailRepository
      */
     public static function getOpens(string $email): Collection
     {
-        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('SentEmail')::whereEmail($email)
             ->with('emailOpen')
             ->whereHas('emailOpen', function ($query) {
@@ -51,7 +48,6 @@ class EmailRepository
      */
     public static function getBounces(string $email): Collection
     {
-        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('SentEmail')::whereEmail($email)
             ->with('emailBounce')
             ->whereHas('emailBounce', function ($query) {
@@ -65,7 +61,6 @@ class EmailRepository
      */
     public static function getComplaints(string $email): Collection
     {
-        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('SentEmail')::whereEmail($email)
             ->with('emailComplaint')
             ->whereHas('emailComplaint', function ($query) {
@@ -80,7 +75,6 @@ class EmailRepository
 
     public static function getClicks(string $email): Collection
     {
-        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('SentEmail')::whereEmail($email)
             ->with(['emailLinks' => function ($query) {
                 $query->where('clicked', true);

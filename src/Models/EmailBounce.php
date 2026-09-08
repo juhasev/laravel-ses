@@ -24,10 +24,6 @@ class EmailBounce extends Model implements EmailBounceContract
 
     public function sentEmail(): BelongsTo
     {
-        /**
-         * @psalm-suppress InvalidArgument
-         * @psalm-suppress InvalidCast
-         */
         return $this->belongsTo(ModelResolver::get('SentEmail'));
     }
 

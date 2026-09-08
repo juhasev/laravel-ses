@@ -21,7 +21,6 @@ class LinkController extends BaseController
     public function click($linkIdentifier): Redirector|RedirectResponse
     {
         try {
-            /** @psalm-suppress UndefinedMethod */
             $emailLink = ModelResolver::get('EmailLink')::whereLinkIdentifier($linkIdentifier)->firstOrFail();
 
             $emailLink->setClicked(true)->incrementClickCount();

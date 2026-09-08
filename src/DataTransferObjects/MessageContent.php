@@ -46,7 +46,7 @@ class MessageContent
             ->pluck('value')
             ->first() ?? '', '<>');
 
-        return new static(
+        return new self(
             id: $messageId,
             destination: data_get($data, 'mail.destination.0'),
             complaintFeedbackType: data_get($data, 'complaint.complaintFeedbackType', 'unknown'),

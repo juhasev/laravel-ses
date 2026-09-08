@@ -1,0 +1,54 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+    - vendor/nesbot/carbon/extension.neon
+
+parameters:
+    paths:
+        - src
+
+    level: 5
+
+    # The package registers its own view namespace, so without this the analyser
+    # cannot tell that LaravelSes::test resolves to a real view and reports the
+    # argument as an invalid view-string. It only surfaces on PHP 8.2.
+    viewDirectories:
+        - src/Mocking/Views
+
+    ignoreErrors:
+        # src/Config/laravelses.php is this package's config file. It is published to the
+        # host application's config/ directory, where env() is the correct call, but it
+        # does not live in a directory named config/ so the rule cannot recognise it.
+        -
+            identifier: larastan.noEnvCallsOutsideOfConfig
+            path: src/Config/laravelses.php
+
+        # SesMailer::sendSymfonyMessage() and SesMailFake::send() both return void where
+        # the parent documents SentMessage|null. Widening them would change the public
+        # API of the mailer, so it is deliberately left for a separate change.
+        -
+            identifier: method.childReturnType
+            paths:
+                - src/SesMailer.php
+                - src/SesMailFake.php
+
+        # The fake narrows on the Mailable contract but reads $to from the concrete
+        # Mailable, and writes $sesBody as the channel its own tests assert against
+        # (see tests/Feature/CustomDomainTest.php).
+        -
+            identifier: property.notFound
+            path: src/SesMailFake.php
+
+        # Illuminate\Support\Testing\Fakes\MailFake declares $currentMailer untyped and
+        # nulls it after every send itself; this mirrors that behaviour exactly.
+        -
+            identifier: assign.propertyType
+            path: src/SesMailFake.php
+
+        # Queueing a mailable through the parent fake: the @var narrows back to the
+        # contract and $data is forwarded positionally, matching the parent's own call.
+        -
+            identifier: varTag.nativeType
+            path: src/SesMailFake.php
+        -
+            identifier: argument.type
+            path: src/SesMailFake.php

@@ -5,10 +5,11 @@ namespace Juhasev\LaravelSes\Tests\Feature\Events;
 use Juhasev\LaravelSes\Factories\Events\SesBounceEvent;
 use Juhasev\LaravelSes\ModelResolver;
 use Juhasev\LaravelSes\Tests\FeatureTestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class SesBounceEventTest extends FeatureTestCase
 {
-    /** @test */
+    #[Test]
     public function it_ensures_the_right_data_structure_for_bounce_event(): void
     {
         $batch = ModelResolver::get('Batch')::create([

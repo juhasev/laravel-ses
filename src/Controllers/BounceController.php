@@ -77,7 +77,6 @@ class BounceController extends BaseController
     protected function persistBounce(MessageContent $message): void
     {
         try {
-            /** @psalm-suppress UndefinedMethod */
             $sentEmail = ModelResolver::get('SentEmail')::whereMessageId($message->id)
                 ->whereBounceTracking(true)
                 ->firstOrFail();
@@ -89,7 +88,6 @@ class BounceController extends BaseController
         }
 
         try {
-            /** @psalm-suppress UndefinedMethod */
             $bounce = ModelResolver::get('EmailBounce')::create([
                 'sent_email_id' => $sentEmail->id,
                 'type' => $message->bounceType,

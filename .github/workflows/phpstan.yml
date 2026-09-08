@@ -1,9 +1,9 @@
-name: Psalm
+name: PHPStan
 
 on: [push]
 
 jobs:
-  psalm:
+  phpstan:
     name: lint
     runs-on: ubuntu-latest
 
@@ -21,10 +21,10 @@ jobs:
         uses: actions/cache@v4
         with:
           path: vendor
-          key: composer-${{ hashFiles('composer.lock') }}
+          key: composer-${{ hashFiles('composer.json') }}
 
       - name: Run composer install
         run: composer install -n --prefer-dist
 
-      - name: Run psalm
+      - name: Run PHPStan
         run: composer lint

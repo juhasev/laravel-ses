@@ -77,7 +77,6 @@ class DeliveryController extends BaseController
     protected function persistDelivery(MessageContent $message): void
     {
         try {
-            /** @psalm-suppress UndefinedMethod */
             $sentEmail = ModelResolver::get('SentEmail')::whereMessageId($message->id)
                 ->whereDeliveryTracking(true)
                 ->firstOrFail();

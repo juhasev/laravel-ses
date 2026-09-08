@@ -9,9 +9,6 @@ use Juhasev\LaravelSes\Contracts\BatchContract;
 use Juhasev\LaravelSes\Contracts\SentEmailContract;
 use Juhasev\LaravelSes\Models\Batch;
 
-/**
- * @psalm-suppress UndefinedMethod
- */
 trait TrackingTrait
 {
     private bool $openTracking = false;
@@ -63,7 +60,6 @@ trait TrackingTrait
     {
         /**
          * @var Batch $batchModel
-         * @psalm-suppress UndefinedMethod
          */
         $batchModel = ModelResolver::get('Batch')::query();
 

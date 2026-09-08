@@ -11,6 +11,7 @@ use Juhasev\LaravelSes\Models\EmailLink;
 use Juhasev\LaravelSes\Models\EmailOpen;
 use Juhasev\LaravelSes\Models\SentEmail;
 use Juhasev\LaravelSes\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ModelResolverTest extends UnitTestCase
 {
@@ -22,9 +23,7 @@ class ModelResolverTest extends UnitTestCase
         ModelResolver::get('invalid-name');
     }
 
-    /**
-     * @dataProvider modelResolverData
-     */
+    #[DataProvider('modelResolverData')]
     public function testModelResolverGet($name, $expected): void
     {
         $this->assertEquals($expected, ModelResolver::get($name));
