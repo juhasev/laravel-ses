@@ -32,7 +32,7 @@
         "aws/aws-php-sns-message-validator": "^1.7",
         "symfony/psr-http-message-bridge": "^7.0 || ^8.0",
         "nyholm/psr7": "^1.0",
-        "voku/simple_html_dom": "^4.8"
+        "voku/simple_html_dom": "^4.8 || ^5.0"
     },
     "require-dev": {
         "mockery/mockery": "^1.0",
