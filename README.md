@@ -7,11 +7,12 @@ Unfortunately, the original author had stopped maintaining this package, so I de
 package can be used with current versions of Laravel.
 
 All packages have been updated to modern versions. I have optimized the original database
-storage for space and proper indexing. This package is compatible with Laravel 12.x.
+storage for space and proper indexing. This package is compatible with Laravel 13.x.
 
 Laravel SES also supports SMTP errors codes will throw meaning exceptions like when you exceed your rate limits so you can handle proper back off.
 
 Laravel version support:
+- If you are using Laravel 13 use `v8.*`
 - If you are using Laravel 12 use `v7.*`
 - If you are using Laravel 11 use `v6.*`
 - If you are using Laravel 10 use `v4.*`
