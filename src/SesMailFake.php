@@ -9,6 +9,7 @@ use Illuminate\Mail\Message;
 use Closure;
 use Illuminate\Contracts\Mail\Mailable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\SentMessage;
 use Illuminate\Support\Testing\Fakes\MailFake;
 use Symfony\Component\Mime\Email;
 
@@ -22,10 +23,10 @@ class SesMailFake extends MailFake implements SesMailerInterface
      * @param Closure|string|null $callback
      * @throws Exception
      */
-    public function send($view, array $data = [], $callback = null): void
+    public function send($view, array $data = [], $callback = null): ?SentMessage
     {
         if (! $view instanceof Mailable) {
-            return;
+            return null;
         }
 
         $message = new Message(new Email());
@@ -52,6 +53,10 @@ class SesMailFake extends MailFake implements SesMailerInterface
         $this->mailables[] = $view;
 
         $this->sendEvent($sentEmail);
+
+        // The fake never touches a transport, so there is no Symfony sent message
+        // to wrap. Null is what the parent fake returns too.
+        return null;
     }
 
     /**
