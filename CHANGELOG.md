@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-ses` will be documented in this file.
 
+## 8.0.0 - 2026-09-08
+
+### What's Changed
+
+* Add Laravel 13 support by @leMaur in https://github.com/juhasev/laravel-ses/pull/36
+
+**Full Changelog**: https://github.com/juhasev/laravel-ses/compare/7.0.0...8.0.0
+
 ## 7.0.0 - 2026-09-08
 
 ### What's Changed
