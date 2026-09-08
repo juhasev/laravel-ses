@@ -22,15 +22,6 @@ parameters:
             identifier: larastan.noEnvCallsOutsideOfConfig
             path: src/Config/laravelses.php
 
-        # SesMailer::sendSymfonyMessage() and SesMailFake::send() both return void where
-        # the parent documents SentMessage|null. Widening them would change the public
-        # API of the mailer, so it is deliberately left for a separate change.
-        -
-            identifier: method.childReturnType
-            paths:
-                - src/SesMailer.php
-                - src/SesMailFake.php
-
         # The fake narrows on the Mailable contract but reads $to from the concrete
         # Mailable, and writes $sesBody as the channel its own tests assert against
         # (see tests/Feature/CustomDomainTest.php).

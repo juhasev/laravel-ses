@@ -18,6 +18,7 @@ use Juhasev\LaravelSes\Exceptions\LaravelSesMaximumSendingRateExceeded;
 use Juhasev\LaravelSes\Exceptions\LaravelSesSendFailedException;
 use Juhasev\LaravelSes\Exceptions\LaravelSesTemporaryServiceFailureException;
 use Juhasev\LaravelSes\Exceptions\LaravelSesTooManyRecipientsException;
+use Symfony\Component\Mailer\SentMessage as SymfonySentMessage;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Header\Headers;
 use Throwable;
@@ -116,10 +117,16 @@ class SesMailer extends Mailer implements SesMailerInterface
         $symfonyMessage = $message->getSymfonyMessage();
 
         if ($this->shouldSendMessage($symfonyMessage, $data)) {
+            $symfonySentMessage = null;
+
             try {
-                $this->sendSymfonyMessage($symfonyMessage);
+                $symfonySentMessage = $this->sendSymfonyMessage($symfonyMessage);
             } catch (Throwable $e) {
                 $this->throwException($e, $symfonyMessage);
+            }
+
+            if ($symfonySentMessage) {
+                return new SentMessage($symfonySentMessage);
             }
         }
 
@@ -129,7 +136,7 @@ class SesMailer extends Mailer implements SesMailerInterface
     /**
      * @throws LaravelSesTooManyRecipientsException
      */
-    protected function sendSymfonyMessage(Email $message): void
+    protected function sendSymfonyMessage(Email $message): ?SymfonySentMessage
     {
         $sentEmail = $this->initMessage($message);
 
@@ -138,9 +145,11 @@ class SesMailer extends Mailer implements SesMailerInterface
         $message->html($this->setupTracking((string) $message->getHtmlBody(), $sentEmail));
 
         // Sending email first, in case sendEvent fails
-        parent::sendSymfonyMessage($message);
+        $symfonySentMessage = parent::sendSymfonyMessage($message);
 
         $this->sendEvent($sentEmail);
+
+        return $symfonySentMessage;
     }
 
     protected function appendToHeaders(Headers $headers, SentEmailContract $email): Headers
