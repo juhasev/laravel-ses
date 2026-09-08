@@ -1,0 +1,39 @@
+name: Composer Security
+
+permissions:
+  contents: read
+
+on:
+  push:
+    paths:
+      - 'composer.json'
+      - '.github/workflows/composer-security.yml'
+  pull_request:
+  schedule:
+    - cron: '27 6 * * 1'  # weekly, so newly published advisories are caught without a push
+
+jobs:
+  audit:
+    name: Malware & advisory audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - name: Setup PHP and pin Composer
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: '8.3'
+          tools: composer:2.10
+          coverage: none
+
+      - name: Resolve dependencies
+        # This is a library, so there is no committed lock file to install from.
+        run: composer update --prefer-dist --no-interaction --no-progress
+
+      - name: Audit
+        # Composer 2.10 fails on known malware as well as security advisories.
+        run: composer audit
