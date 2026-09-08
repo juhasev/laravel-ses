@@ -1,0 +1,40 @@
+name: Secret Scan
+
+permissions:
+  contents: read
+
+on: [push, pull_request]
+
+env:
+  GITLEAKS_VERSION: 8.30.1
+
+jobs:
+  gitleaks:
+    name: gitleaks
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          # gitleaks git walks the history, so a shallow clone would scan almost nothing.
+          fetch-depth: 0
+          persist-credentials: false
+
+      # The official action needs a licence key for organisation-owned repositories,
+      # which would mean a secret only an administrator can add. The released binary
+      # is the same scanner and needs nothing.
+      - name: Install gitleaks
+        run: |
+          set -euo pipefail
+          base="https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}"
+          asset="gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          curl -fsSL -o "${asset}" "${base}/${asset}"
+          curl -fsSL -o checksums.txt "${base}/gitleaks_${GITLEAKS_VERSION}_checksums.txt"
+          grep " ${asset}$" checksums.txt | sha256sum -c -
+          tar -xzf "${asset}" gitleaks
+          ./gitleaks version
+
+      - name: Scan history
+        run: ./gitleaks git --redact --no-banner

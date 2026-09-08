@@ -1,0 +1,20 @@
+title = "laravel-ses"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = """
+The SNS notification tests carry real Amazon SES event payloads, captured so the
+webhook controllers can be exercised against the shape AWS actually sends. Every
+one of them contains a base64 Signature field, which the generic-api-key rule
+matches on entropy alone.
+
+These are signatures over public notification bodies, not credentials: they
+authenticate a message AWS already sent, they grant nothing, and the SNS
+validator in this package verifies them against Amazon's public certificate.
+"""
+paths = [
+  '''tests/Feature/.*TrackingTest\.php''',
+  '''tests/Files/.*\.json''',
+]
