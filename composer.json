@@ -39,7 +39,7 @@
         "orchestra/testbench": "^9.5",
         "phpunit/phpunit": "^10.5.0",
         "ext-json": "*",
-        "vimeo/psalm": "^5.25",
+        "larastan/larastan": "^3.11",
         "nunomaduro/collision": "^8.1"
     },
     "autoload": {
@@ -53,7 +53,7 @@
        }
    },
     "scripts": {
-        "lint": "vendor/bin/psalm",
+        "lint": "vendor/bin/phpstan analyse",
         "test": "vendor/bin/phpunit",
         "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
     },
@@ -69,7 +69,6 @@
     },
     "config": {
         "allow-plugins": {
-            "vimeo/psalm": true,
             "phpunit/phpunit": true
         }
     },
