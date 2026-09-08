@@ -12,7 +12,6 @@ use Symfony\Component\Mime\Email;
 /**
  * @method getBatchId()
  * @mixin TrackingTrait
- * @psalm-suppress UndefinedMethod
  */
 trait SesMailerTrait
 {
@@ -28,7 +27,6 @@ trait SesMailerTrait
     {
         $this->checkNumberOfRecipients($message);
 
-        /** @psalm-suppress UndefinedMethod */
         $sentEmailModel = ModelResolver::get('SentEmail')::create([
             'message_id' => $message->generateMessageId(),
             'email' => $message->getTo()[0]->getAddress(),

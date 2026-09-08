@@ -15,7 +15,6 @@ class EmailStatRepository
      */
     public static function getSentCount(string $email): int
     {
-        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('SentEmail')::whereEmail($email)->count();
     }
 
@@ -24,7 +23,6 @@ class EmailStatRepository
      */
     public static function getDeliveriesCount(string $email): int
     {
-        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('SentEmail')::whereEmail($email)->whereNotNull('delivered_at')->count();
     }
 
@@ -33,7 +31,6 @@ class EmailStatRepository
      */
     public static function getOpenedCount(string $email): int
     {
-        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('SentEmail')::whereEmail($email)
             ->withCount(['emailOpen' => function ($query) {
                 $query->whereNotNull('opened_at');
@@ -45,7 +42,6 @@ class EmailStatRepository
      */
     public static function getComplaintsCount(string $email): int
     {
-        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('SentEmail')::whereEmail($email)
             ->withCount(['emailComplaint' => function ($query) {
                 $query->whereNotNull('complained_at');
@@ -57,7 +53,6 @@ class EmailStatRepository
      */
     public static function getBouncedCount(string $email): int
     {
-        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('SentEmail')::whereEmail($email)
             ->withCount(['emailBounce' => function ($query) {
                 $query->whereNotNull('bounced_at');
@@ -69,7 +64,6 @@ class EmailStatRepository
      */
     public static function getClicksCount(string $email): int
     {
-        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('EmailLink')::join(
             'laravel_ses_sent_emails',
             'laravel_ses_sent_emails.id',

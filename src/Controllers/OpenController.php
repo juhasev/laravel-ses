@@ -23,7 +23,6 @@ class OpenController extends BaseController
     public function open($beaconIdentifier): JsonResponse|Redirector|RedirectResponse
     {
         try {
-            /** @psalm-suppress UndefinedMethod */
             $emailOpen = ModelResolver::get('EmailOpen')::whereBeaconIdentifier($beaconIdentifier)->firstOrFail();
             $emailOpen->opened_at = Carbon::now();
             $emailOpen->save();

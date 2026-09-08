@@ -9,6 +9,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Juhasev\LaravelSes\Contracts\EmailLinkContract;
 use Juhasev\LaravelSes\ModelResolver;
 
+/**
+ * @property int $id
+ * @property int $sent_email_id
+ * @property string $link_identifier
+ * @property string $original_url
+ * @property bool $clicked
+ * @property int $click_count
+ */
 class EmailLink extends Model implements EmailLinkContract
 {
     protected $table = 'laravel_ses_email_links';
@@ -25,10 +33,6 @@ class EmailLink extends Model implements EmailLinkContract
 
     public function sentEmail(): BelongsTo
     {
-        /**
-         * @psalm-suppress InvalidArgument
-         * @psalm-suppress InvalidCast
-         */
         return $this->belongsTo(ModelResolver::get('SentEmail'));
     }
 

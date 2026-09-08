@@ -108,7 +108,7 @@ class LaravelSesServiceProvider extends ServiceProvider
     }
 
     /**
-     * @psalm-param 'from'|'reply_to'|'to' $type
+     * @phpstan-param 'from'|'reply_to'|'to' $type
      */
     protected function setGlobalAddress(SesMailer $mailer, array $config, string $type): void
     {

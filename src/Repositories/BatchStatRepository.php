@@ -16,7 +16,6 @@ class BatchStatRepository
      */
     public static function getSentCount(BatchContract $batch): mixed
     {
-        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('SentEmail')::where('batch_id', $batch->getId())->count();
     }
 
@@ -25,7 +24,6 @@ class BatchStatRepository
      */
     public static function getOpenedCount(BatchContract $batch): int
     {
-        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('SentEmail')::where('batch_id', $batch->getId())
             ->join(
                 'laravel_ses_email_opens',
@@ -41,7 +39,6 @@ class BatchStatRepository
      */
     public static function getBouncedCount(BatchContract $batch): int
     {
-        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('SentEmail')::where('batch_id', $batch->getId())
             ->join(
                 'laravel_ses_email_bounces',
@@ -57,7 +54,6 @@ class BatchStatRepository
      */
     public static function getComplaintsCount(BatchContract $batch): int
     {
-        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('SentEmail')::where('batch_id', $batch->getId())
         ->join(
             'laravel_ses_email_complaints',
@@ -73,7 +69,6 @@ class BatchStatRepository
      */
     public static function getDeliveriesCount(BatchContract $batch): int
     {
-        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('SentEmail')::where('batch_id', $batch->getId())
             ->whereNotNull('delivered_at')
             ->count();
@@ -84,7 +79,6 @@ class BatchStatRepository
      */
     public static function getClicksCount(BatchContract $batch): int
     {
-        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('SentEmail')::where('laravel_ses_sent_emails.batch_id', $batch->getId())
             ->join('laravel_ses_email_links', function ($join) {
                 $join
@@ -100,7 +94,6 @@ class BatchStatRepository
      */
     public static function getLinkPopularity(BatchContract $batch): array
     {
-        /** @psalm-suppress UndefinedMethod */
         return ModelResolver::get('SentEmail')::where('laravel_ses_sent_emails.batch_id', $batch->getId())
             ->join('laravel_ses_email_links', function ($join) {
                 $join

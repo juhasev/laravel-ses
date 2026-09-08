@@ -22,10 +22,6 @@ class Batch extends Model implements BatchContract
 
     public function sentEmails(): HasMany
     {
-        /**
-         * @psalm-suppress InvalidArgument
-         * @psalm-suppress InvalidCast
-         */
         return $this->hasMany(ModelResolver::get('SentEmail'));
     }
 
