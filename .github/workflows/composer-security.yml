@@ -5,6 +5,7 @@ permissions:
 
 on:
   push:
+    branches: [ master ]
     paths:
       - 'composer.json'
       - '.github/workflows/composer-security.yml'

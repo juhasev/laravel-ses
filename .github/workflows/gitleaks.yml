@@ -3,7 +3,14 @@ name: Secret Scan
 permissions:
   contents: read
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
 
 env:
   GITLEAKS_VERSION: 8.30.1
