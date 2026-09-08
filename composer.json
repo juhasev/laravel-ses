@@ -48,10 +48,10 @@
         }
     },
     "autoload-dev": {
-       "psr-4": {
-           "Juhasev\\LaravelSes\\Tests\\": "tests/"
-       }
-   },
+        "psr-4": {
+            "Juhasev\\LaravelSes\\Tests\\": "tests/"
+        }
+    },
     "scripts": {
         "lint": "vendor/bin/phpstan analyse",
         "test": "vendor/bin/phpunit",
@@ -70,6 +70,18 @@
     "config": {
         "allow-plugins": {
             "phpunit/phpunit": true
+        },
+        "policy": {
+            "malware": {
+                "block": true,
+                "block-scope": "all"
+            },
+            "advisories": {
+                "block": true
+            },
+            "abandoned": {
+                "audit": "report"
+            }
         }
     },
     "prefer-stable": true,

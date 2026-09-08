@@ -1,0 +1,50 @@
+name: Secret Scan
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+env:
+  GITLEAKS_VERSION: 8.30.1
+  # Checked in rather than downloaded next to the binary: fetching the checksum
+  # from the same release only catches corruption, since anything able to replace
+  # the asset can replace the checksum file with it.
+  GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+
+jobs:
+  gitleaks:
+    name: gitleaks
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          # gitleaks git walks the history, so a shallow clone would scan almost nothing.
+          fetch-depth: 0
+          persist-credentials: false
+
+      # The official action needs a licence key for organisation-owned repositories,
+      # which would mean a secret only an administrator can add. The released binary
+      # is the same scanner and needs nothing.
+      - name: Install gitleaks
+        run: |
+          set -euo pipefail
+          asset="gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          curl -fsSL -o "${asset}" \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/${asset}"
+          echo "${GITLEAKS_SHA256}  ${asset}" | sha256sum -c -
+          tar -xzf "${asset}" gitleaks
+          ./gitleaks version
+
+      - name: Scan history
+        run: ./gitleaks git --redact --no-banner
