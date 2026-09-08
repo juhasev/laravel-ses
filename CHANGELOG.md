@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-ses` will be documented in this file.
 
+## 8.1.0 - 2026-09-08
+
+#### Upgrade note
+
+If you extend `SesMailer` or `SesMailFake` and override `sendSymfonyMessage()` or `send()`, update their return types: they now return `?Symfony\Component\Mailer\SentMessage` and `?Illuminate\Mail\SentMessage` respectively, instead of `void`.
+
+### What's Changed
+
+* Return the SentMessage from SesMail::send() by @leMaur in https://github.com/juhasev/laravel-ses/pull/45
+
+**Full Changelog**: https://github.com/juhasev/laravel-ses/compare/8.0.1...8.1.0
+
 ## 8.0.1 - 2026-09-08
 
 ### What's Changed
