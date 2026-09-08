@@ -6,7 +6,6 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Http;
 use Juhasev\LaravelSes\Facades\SesMail;
 use Juhasev\LaravelSes\LaravelSesServiceProvider;
-use Mockery\Mock;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
 class FeatureTestCase extends OrchestraTestCase
