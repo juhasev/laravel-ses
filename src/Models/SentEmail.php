@@ -68,11 +68,6 @@ class SentEmail extends Model implements SentEmailContract
         return $this->hasOne(ModelResolver::get('EmailComplaint'));
     }
 
-    public function emailReject(): HasOne
-    {
-        return $this->hasOne(ModelResolver::get('EmailReject'));
-    }
-
     public function batch(): BelongsTo
     {
         return $this->belongsTo(ModelResolver::get('Batch'));

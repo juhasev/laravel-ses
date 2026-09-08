@@ -28,7 +28,5 @@ interface SentEmailContract
 
     public function emailComplaint(): HasOne;
 
-    public function emailReject(): HasOne;
-
     public function getId(): mixed;
 }
