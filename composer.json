@@ -25,7 +25,7 @@
     ],
     "require": {
         "php": "^8.2",
-        "illuminate/contracts": "^11.0",
+        "illuminate/contracts": "^12.61.1",
         "aws/aws-sdk-php": "^3.288.0",
         "ramsey/uuid": "^4.3",
         "guzzlehttp/guzzle": "^7.8.1",
@@ -36,11 +36,11 @@
     },
     "require-dev": {
         "mockery/mockery": "^1.0",
-        "orchestra/testbench": "^9.5",
-        "phpunit/phpunit": "^10.5.0",
+        "orchestra/testbench": "^10.11",
+        "phpunit/phpunit": "^11.5.50 || ^12.0.1",
         "ext-json": "*",
         "larastan/larastan": "^3.11",
-        "nunomaduro/collision": "^8.1"
+        "nunomaduro/collision": "^8.9.5"
     },
     "autoload": {
         "psr-4": {
@@ -55,7 +55,7 @@
     "scripts": {
         "lint": "vendor/bin/phpstan analyse",
         "test": "vendor/bin/phpunit",
-        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+        "test-coverage": "vendor/bin/phpunit --coverage-html build/coverage --coverage-text=build/coverage.txt --coverage-clover build/logs/clover.xml"
     },
     "extra": {
         "laravel": {

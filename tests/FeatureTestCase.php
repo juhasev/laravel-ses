@@ -54,7 +54,7 @@ class FeatureTestCase extends OrchestraTestCase
      *
      * @param Application $app
      */
-    protected function getEnvironmentSetUp($app)
+    protected function defineEnvironment($app)
     {
         // Setup default database to use sqlite :memory:
         $app['config']->set('database.default', 'testbench');
