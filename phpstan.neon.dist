@@ -8,6 +8,12 @@ parameters:
 
     level: 5
 
+    # The package registers its own view namespace, so without this the analyser
+    # cannot tell that LaravelSes::test resolves to a real view and reports the
+    # argument as an invalid view-string. It only surfaces on PHP 8.2.
+    viewDirectories:
+        - src/Mocking/Views
+
     ignoreErrors:
         # src/Config/laravelses.php is this package's config file. It is published to the
         # host application's config/ directory, where env() is the correct call, but it
