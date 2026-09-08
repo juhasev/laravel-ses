@@ -1,9 +1,16 @@
 name: Tests
 
-on: [ push ]
+on: [ push, pull_request ]
 
 permissions:
   contents: read
+
+# A fork's push happens in the fork, so without pull_request the upstream PR gets
+# no run at all. With both triggers a branch in this repo would otherwise run
+# twice for the same commit, which this collapses.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
