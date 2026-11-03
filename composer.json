@@ -83,6 +83,12 @@
             },
             "abandoned": {
                 "audit": "report"
+            },
+            "cooldown": {
+                "period": "7 days",
+                "ignore": {
+                    "juhasev/*": "own vendor namespace (Packagist vendor names are owned)"
+                }
             }
         }
     },
