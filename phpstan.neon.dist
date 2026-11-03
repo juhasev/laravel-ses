@@ -29,12 +29,6 @@ parameters:
             identifier: property.notFound
             path: src/SesMailFake.php
 
-        # Illuminate\Support\Testing\Fakes\MailFake declares $currentMailer untyped and
-        # nulls it after every send itself; this mirrors that behaviour exactly.
-        -
-            identifier: assign.propertyType
-            path: src/SesMailFake.php
-
         # Queueing a mailable through the parent fake: the @var narrows back to the
         # contract and $data is forwarded positionally, matching the parent's own call.
         -
